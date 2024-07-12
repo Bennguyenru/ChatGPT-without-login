@@ -135,7 +135,9 @@ class GPT:
             print(complete_response.rstrip())
 
     async def close(self):
-        await self.page.close()
+        # Before calling close, check if the object is not None
+        if self.page is not None:
+            await self.page.close()
         await self.browser.close()
 
 if __name__ == "__main__":
@@ -155,6 +157,8 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"An error occurred: {e}")
         finally:
-            await session.close()
+            # Similarly, when closing the session, ensure it's not None
+            if session is not None:
+                await session.close()
 
     asyncio.run(main())
