@@ -33,11 +33,11 @@ class GPT {
             await context.addCookies([{
                 name: '__Secure-next-auth.session-token',
                 value: this.session_token,
-                domain: '.chatgpt.com',
+                domain: 'example.com',
                 path: '/',
                 secure: true,
                 httpOnly: true,
-                sameSite: 'Lax'
+                sameSite: 'None'
             }]);
         }
 
