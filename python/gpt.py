@@ -56,27 +56,15 @@ class GPT:
         prompt_textarea = await self.page.query_selector('#prompt-textarea')
         if prompt_textarea is None:
             print("Cannot find the prompt input on the webpage.\nPlease check whether you have access to chatgpt.com without logging in via your browser.")
-            self.session_active = False
-            await self.close()
-            return 
-        
-        await self.page.evaluate(f'document.querySelector("#prompt-textarea").value = "{prompt_text[:-1]}"')
-        await self.page.type('#prompt-textarea', prompt_text[-1])
-        
-        try:
-            fruitjuice_send_button = await self.page.evaluate('document.querySelector(\'[data-testid="fruitjuice-send-button"]\') !== null')
-            send_button = await self.page.evaluate('document.querySelector(\'[data-testid="send-button"]\') !== null')
+            return  # Added return to exit the function if prompt_textarea is not found
 
-            if fruitjuice_send_button:
-                await self.page.click('[data-testid="fruitjuice-send-button"]')
-            elif send_button:
-                await self.page.click('[data-testid="send-button"]')
-            else:
-                print("Neither send button is present")
-        except Exception as e:
-            print(f"Failed to click the send button: {str(e)}")
-
-        await self.wait_for_and_print_new_response()
+        # Added missing steps to fill and submit the prompt
+        await prompt_textarea.fill(prompt_text)
+        submit_button = await self.page.query_selector('text="Submit"')  # Assuming there's a submit button with text "Submit"
+        if submit_button:
+            await submit_button.click()
+        else:
+            print("Cannot find the submit button on the webpage.")
 
     async def wait_for_and_print_new_response(self):
         await self.wait_for_initial_response()
