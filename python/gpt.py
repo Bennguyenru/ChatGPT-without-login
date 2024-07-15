@@ -162,3 +162,25 @@ if __name__ == "__main__":
                 await session.close()
 
     asyncio.run(main())
+    
+    // Fixed version of test_implementation.js
+
+    const { GPT } = require('./gpt.js');
+
+    (async () => {
+        try {
+            // create gpt instance & send initial prompt
+            const gptSession = new GPT("Tell me a joke.", true);
+
+            await gptSession.start();
+            
+            console.log("\n -- asking GPT to explain the joke -- \n");
+            // Fixed: Ensuring the prompt handling method is correctly awaited before proceeding
+            await gptSession.handlePrompt("Explain the joke.");
+
+            // gracefully close the session
+            await gptSession.close();
+        } catch (error) {
+            console.error("Error in GPT session:", error);
+        }
+    })();
